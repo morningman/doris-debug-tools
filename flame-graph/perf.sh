@@ -59,7 +59,7 @@ if [ ! -d "${SCRIPT_DIR}/FlameGraph" ]; then
 fi
 
 # ATTN: Uncomment to choose the one that suits you
-s3=https://justtmp-bj-xxxx.cos.ap-beijing.myqcloud.com
+# s3=https://justtmp-bj-xxxx.cos.ap-beijing.myqcloud.com
 
 # for java flame, change in need
 export JAVA_HOME=/opt/java/jdk1.8.0_131
@@ -123,7 +123,7 @@ fi
 # Optional: Upload to object storage
 # ---------------------------------------------------------------
 if [[ -z "${s3}" ]]; then
-    warn "s3 endpoint not configured, skip upload."
+    warn "s3 endpoint not configured, skip upload.(try setting 's3' endpoint in perf.sh)"
 else
     upload_url="${s3}/flame-graph/${svg_name}"
     info "Uploading SVG to: ${upload_url}"

@@ -134,7 +134,7 @@ fi
 if [ -z "$LATEST_HEAP" ]; then
     error "No heap profile file found in $HEAP_DIR"
     error "Please check if jemalloc profiling is enabled in be.conf"
-    error "Set prof:true in JEMALLOC_CONF"
+    error "Set prof:true and prof_active:true in JEMALLOC_CONF"
     exit 1
 fi
 
