@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Ranger Admin 服务地址 -->
+    <property>
+        <name>ranger.plugin.doris.policy.rest.url</name>
+        <value>http://localhost:6080</value>
+        <description>URL of the Ranger Admin service</description>
+    </property>
+
+    <!-- Ranger 服务名称 -->
+    <property>
+        <name>ranger.plugin.doris.service.name</name>
+        <value>doris</value>
+        <description>Name of the Doris service in Ranger</description>
+    </property>
+
+    <!-- 策略更新间隔（毫秒） -->
+    <property>
+        <name>ranger.plugin.doris.policy.pollIntervalMs</name>
+        <value>30000</value>
+        <description>Policy refresh interval in milliseconds</description>
+    </property>
+
+    <!-- 策略缓存目录 -->
+    <property>
+        <name>ranger.plugin.doris.policy.cache.dir</name>
+        <value>/tmp/ranger-doris-cache</value>
+        <description>Directory for policy cache files</description>
+    </property>
+
+    <!-- 是否启用审计 -->
+    <property>
+        <name>xasecure.audit.is.enabled</name>
+        <value>false</value>
+        <description>Enable/disable audit logging</description>
+    </property>
+
+    <!-- 连接超时配置 -->
+    <property>
+        <name>ranger.plugin.doris.policy.rest.client.connection.timeoutMs</name>
+        <value>120000</value>
+        <description>Connection timeout in milliseconds</description>
+    </property>
+
+    <property>
+        <name>ranger.plugin.doris.policy.rest.client.read.timeoutMs</name>
+        <value>30000</value>
+        <description>Read timeout in milliseconds</description>
+    </property>
+</configuration>

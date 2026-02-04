@@ -7,8 +7,11 @@ Tool set for Apache Doris
 |-----------------------------|-----------------------------------------------------------------------------|
 | Doris BE Memory Analyzer    | Analyze Apache Doris BE memory usage using jemalloc heap profiling.        |
 | Flame Graph Generator       | Generate CPU flame graphs using Linux `perf` and FlameGraph tools.         |
+| Ranger Test                 | Test Apache Ranger connectivity and policy retrieval for Doris.            |
 
 ## Documentation
 
 - Doris BE Memory Analyzer: see `be-mem-analyzer/README.md`
 - Flame Graph Generator: see `flame-graph/README.md`
+- Ranger Test: see `ranger-test/README.md`
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<!-- Created at 2025-10-16 18:25:03.790 -->
+<configuration>
+    <property>
+        <name>hadoop.security.authentication</name>
+        <value>kerberos</value>
+    </property>
+    <property>
+        <name>hadoop.security.authorization</name>
+        <value>true</value>
+    </property>
+</configuration>

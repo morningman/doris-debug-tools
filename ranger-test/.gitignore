@@ -1,0 +1,33 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Config files (keep only examples)
+config/ranger-doris-security.xml
+src/main/resources/ranger-doris-security.xml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Ranger cache
+/tmp/ranger-doris-cache/
