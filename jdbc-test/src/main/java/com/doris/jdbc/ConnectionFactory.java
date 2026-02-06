@@ -53,7 +53,9 @@ public class ConnectionFactory {
     /**
      * Creates an LDAP-authenticated connection with SSL enabled.
      *
-     * Combines LDAP authentication with SSL encryption for enhanced security.
+     * When SSL is enabled, the standard MySQL authentication plugin can be used
+     * because SSL provides the necessary encryption for password transmission.
+     * No need for custom ClearPasswordPlugin in this case.
      */
     public static Connection createLDAPSSLConnection(String host, int port, String database,
                                                      String user, String password) throws SQLException {
@@ -61,7 +63,7 @@ public class ConnectionFactory {
         boolean verifyServerCert = !Boolean.getBoolean("doris.ssl.skipVerify");
 
         String url = String.format(
-            "jdbc:mysql://%s:%d/%s?authenticationPlugins=com.doris.jdbc.auth.ClearPasswordPlugin&defaultAuthenticationPlugin=com.doris.jdbc.auth.ClearPasswordPlugin&disabledAuthenticationPlugins=com.mysql.jdbc.authentication.MysqlClearPasswordPlugin&useSSL=true&requireSSL=true&verifyServerCertificate=%s&allowPublicKeyRetrieval=true",
+            "jdbc:mysql://%s:%d/%s?useSSL=true&requireSSL=true&verifyServerCertificate=%s&allowPublicKeyRetrieval=true",
             host, port, database, verifyServerCert
         );
         return DriverManager.getConnection(url, user, password);
