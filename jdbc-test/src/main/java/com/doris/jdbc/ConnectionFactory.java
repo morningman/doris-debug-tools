@@ -63,7 +63,7 @@ public class ConnectionFactory {
         boolean verifyServerCert = !Boolean.getBoolean("doris.ssl.skipVerify");
 
         String url = String.format(
-            "jdbc:mysql://%s:%d/%s?useSSL=true&requireSSL=true&verifyServerCertificate=%s&allowPublicKeyRetrieval=true",
+            "jdbc:mysql://%s:%d/%s?useSSL=true&sslMode=REQUIRED",
             host, port, database, verifyServerCert
         );
         return DriverManager.getConnection(url, user, password);
