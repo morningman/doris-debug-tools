@@ -1,27 +1,27 @@
 # JDBC Version Compatibility Test
 
-针对 [Issue #60634](https://github.com/apache/doris/issues/60634) 的测试工具：`mysql-connector-j` 9.5.0+ 连接 Doris 时查询返回空数据。
+A testing tool for [Issue #60634](https://github.com/apache/doris/issues/60634): `mysql-connector-j` 9.5.0+ returns empty query results when connecting to Apache Doris.
 
-## 问题背景
+## Background
 
-| 关键信息 | 说明 |
+| Key Info | Details |
 |---|---|
-| **触发条件** | `useServerPrepStmts=true` + mysql-connector-j ≥ 9.5.0 |
-| **现象** | 查询返回空结果集，但表中有数据 |
+| **Trigger** | `useServerPrepStmts=true` + mysql-connector-j ≥ 9.5.0 |
+| **Symptom** | Queries return empty result sets, but the table actually contains data |
 | **Workaround** | `useServerPrepStmts=false&cacheResultSetMetadata=true` |
-| **影响版本** | Doris 3.1.4、4.0.2 均受影响 |
+| **Affected Versions** | Doris 3.1.4 and 4.0.2 are both affected |
 
-## 快速开始
+## Quick Start
 
-### 前置条件
+### Prerequisites
 
 - Java 17+
 - Maven 3.x
-- 可访问的 Doris 集群
+- An accessible Apache Doris cluster
 
-### 1. 修改配置
+### 1. Configure Connection
 
-编辑 `src/main/resources/connection.properties`：
+Edit `src/main/resources/connection.properties`:
 
 ```properties
 doris.host=127.0.0.1
@@ -31,29 +31,29 @@ doris.user=root
 doris.password=
 ```
 
-### 2. 测试单个版本
+### 2. Test a Single Driver Version
 
 ```bash
-# 构建（指定驱动版本 profile）
+# Build with a specific driver version profile
 ./build.sh v9.5.0
 
-# 运行
+# Run tests
 ./run.sh
 ```
 
-### 3. 批量测试所有版本
+### 3. Batch Test All Versions
 
 ```bash
 ./run-all.sh
 ```
 
-一次性构建并测试 6 个驱动版本（8.0.33 ~ 9.6.0），最终输出对比表格。
+This builds and tests all 6 driver versions (8.0.33 ~ 9.6.0) in sequence and outputs a comparison table.
 
-## 测试内容
+## What's Being Tested
 
-### 驱动版本 (Maven Profile)
+### Driver Versions (Maven Profiles)
 
-| Profile | 版本 |
+| Profile | Version |
 |---|---|
 | `v8.0.33` | 8.0.33 |
 | `v9.1.0` | 9.1.0 |
@@ -62,27 +62,28 @@ doris.password=
 | `v9.5.0` | 9.5.0 |
 | `v9.6.0` | 9.6.0 |
 
-### JDBC 参数组合
+### JDBC Parameter Combinations
 
-每个版本会测试 4 种参数组合：
-1. **默认参数** — 无额外 URL 参数
-2. **`useServerPrepStmts=true`** — 显式启用服务端预编译（触发 Bug 的场景）
-3. **`useServerPrepStmts=false`** — 禁用服务端预编译
-4. **`useServerPrepStmts=false&cacheResultSetMetadata=true`** — 评论区推荐的 Workaround
+Each version is tested with 4 parameter combinations:
 
-### 查询场景 (每种参数组合 9 个测试)
+1. **Default** — No extra URL parameters
+2. **`useServerPrepStmts=true`** — Explicitly enable server-side prepared statements (triggers the bug)
+3. **`useServerPrepStmts=false`** — Disable server-side prepared statements
+4. **`useServerPrepStmts=false&cacheResultSetMetadata=true`** — Recommended workaround from issue discussion
+
+### Query Scenarios (9 tests per parameter combination)
 
 1. `Statement` — `SELECT *`
-2. `Statement` — `SELECT WHERE`
-3. `PreparedStatement` — `SELECT *`（核心场景）
-4. `PreparedStatement` — `SELECT WHERE id = ?`（核心场景）
-5. `PreparedStatement` — `SELECT WHERE username = ?`
-6. 聚合查询 — `COUNT(*)`
+2. `Statement` — `SELECT ... WHERE`
+3. `PreparedStatement` — `SELECT *` (core scenario)
+4. `PreparedStatement` — `SELECT ... WHERE id = ?` (core scenario)
+5. `PreparedStatement` — `SELECT ... WHERE username = ?`
+6. Aggregate query — `COUNT(*)`
 7. `SHOW DATABASES`
 8. `SHOW TABLES`
-9. `ResultSet` 元数据检查
+9. `ResultSet` metadata inspection
 
-## 输出示例
+## Sample Output
 
 ```
 ╔══════════════════════════════════════════════════════════════════════╗
@@ -98,15 +99,20 @@ doris.password=
 ╚══════════════╩════════════════╩══════════╩══════════════════════════╝
 ```
 
-## 目录结构
+For each failed test case, detailed reproduction steps are printed, including:
+- JDBC URL, parameters, SQL statement, and bind parameters
+- Copy-pasteable Java code to reproduce the issue
+
+## Project Structure
 
 ```
 jdbc-version-test/
-├── pom.xml                   # Maven profiles 切换驱动版本
-├── build.sh                  # 构建脚本
-├── run.sh                    # 运行脚本
-├── run-all.sh                # 批量测试所有版本
-├── README.md
+├── pom.xml                   # Maven profiles to switch driver versions
+├── build.sh                  # Build script
+├── run.sh                    # Run script
+├── run-all.sh                # Batch test all versions
+├── README.md                 # Documentation (Chinese)
+├── README_EN.md              # Documentation (English)
 ├── .gitignore
 └── src/main/
     ├── java/com/doris/versiontest/

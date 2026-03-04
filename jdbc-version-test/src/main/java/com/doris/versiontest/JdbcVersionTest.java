@@ -107,7 +107,8 @@ public class JdbcVersionTest {
                 try (Connection conn = DriverManager.getConnection(url, user, password)) {
                     runTestSuite(conn, comboName);
                 } catch (Exception e) {
-                    System.err.printf("  [ERROR] Connection failed for [%s]: %s%n", comboName, e.getMessage());
+                    System.err.printf("  [ERROR] Connection/test failed for [%s]: %s%n", comboName, e.getMessage());
+                    e.printStackTrace(System.err);
                     recordFail(comboName + " / Connection", "DriverManager.getConnection()",
                         url, "(none)", "Successful connection", "Exception: " + e.getMessage());
                 }
@@ -188,16 +189,33 @@ public class JdbcVersionTest {
     // Test Suite
     // ================================================================
 
-    private static void runTestSuite(Connection conn, String comboName) throws SQLException {
-        testStatementSelectAll(conn, comboName);
-        testStatementSelectWhere(conn, comboName);
-        testPreparedStatementSelectAll(conn, comboName);
-        testPreparedStatementSelectById(conn, comboName);
-        testPreparedStatementSelectByName(conn, comboName);
-        testAggregateQuery(conn, comboName);
-        testShowDatabases(conn, comboName);
-        testShowTables(conn, comboName);
-        testResultSetMetadata(conn, comboName);
+    private static void runTestSuite(Connection conn, String comboName) {
+        runSingleTest(() -> testStatementSelectAll(conn, comboName), comboName, "Statement SELECT *");
+        runSingleTest(() -> testStatementSelectWhere(conn, comboName), comboName, "Statement SELECT WHERE");
+        runSingleTest(() -> testPreparedStatementSelectAll(conn, comboName), comboName, "PreparedStatement SELECT *");
+        runSingleTest(() -> testPreparedStatementSelectById(conn, comboName), comboName, "PreparedStatement SELECT by ID");
+        runSingleTest(() -> testPreparedStatementSelectByName(conn, comboName), comboName, "PreparedStatement SELECT by name");
+        runSingleTest(() -> testAggregateQuery(conn, comboName), comboName, "Aggregate COUNT(*)");
+        runSingleTest(() -> testShowDatabases(conn, comboName), comboName, "SHOW DATABASES");
+        runSingleTest(() -> testShowTables(conn, comboName), comboName, "SHOW TABLES");
+        runSingleTest(() -> testResultSetMetadata(conn, comboName), comboName, "ResultSet Metadata");
+    }
+
+    @FunctionalInterface
+    private interface TestAction {
+        void run() throws Exception;
+    }
+
+    private static void runSingleTest(TestAction action, String comboName, String testLabel) {
+        try {
+            action.run();
+        } catch (Exception e) {
+            String testName = comboName + " / " + testLabel;
+            System.err.printf("%n  [EXCEPTION] %s: %s%n", testName, e.getMessage());
+            e.printStackTrace(System.err);
+            recordFail(testName, "N/A (exception thrown)", "N/A", "(none)",
+                "No exception", "Exception: " + e.getClass().getSimpleName() + ": " + e.getMessage());
+        }
     }
 
     // ---- Test 1: Statement.executeQuery("SELECT * FROM t_user") ----
